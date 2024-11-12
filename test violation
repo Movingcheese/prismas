@@ -1,0 +1,37 @@
+LambdaWorkflow:
+    Type: "AWS::IAM::Role"
+    Condition: IsNotQaSkip
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+          - Effect: Allow
+            Principal:
+              Service:
+                - !Sub states.${AWS::Region}.amazonaws.com
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service: ses.amazonaws.com
+            Action: sts:AssumeRole          
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AWSCloudFormationFullAccess" 
+        - !Sub "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AWSLambda_FullAccess"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/SecretsManagerReadWrite"
+        #- !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonEC2FullAccess"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        #- !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaENIManagementAccess"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AWSXRayDaemonWriteAccess" 
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonS3FullAccess"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/CloudWatchFullAccess"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonEventBridgeFullAccess"
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AWSGlueConsoleFullAccess"
